@@ -1,0 +1,54 @@
+{% extends '@Tabler/layout_horizontal.html.twig' %}
+
+{% block title %}{% block page_title %}Welcome!{% endblock %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('vendor/air-datepicker/air-datepicker.css') }}">
+    {# Add your project-specific stylesheets here #}
+    {# <link rel="stylesheet" href="{{ asset('build/app.css') }}"> #}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Add your project-specific javascripts here #}
+    {# <script src="{{ asset('build/app.js') }}"></script> #}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+{% endblock %}
+
+{% block navbar_start %}
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_user_index') }}">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_import_status') }}">Import</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block page_header %}
+    <div class="container-xl">
+        <div class="page-header d-print-none">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="page-title">{% block page_header_title %}{% endblock %}</h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        {% block page_actions %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_body %}
+    <div class="page-body">
+        <div class="container-xl">
+            {# Flash messages are now handled by Tabler's includes/flash_messages.html.twig via page_content_start block in layout_horizontal.html.twig #}
+            {% block content %}{% endblock %} {# This is where child templates will put their content #}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,1 @@
+wget https://getcomposer.org/download/latest-stable/composer.phar

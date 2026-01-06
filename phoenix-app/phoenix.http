@@ -1,0 +1,40 @@
+### Start import
+POST http://localhost:4000/api/import
+Authorization: Bearer super-secret-api-token
+
+### Import progress
+GET http://localhost:4000/api/import
+Authorization: Bearer super-secret-api-token
+
+### get users
+GET http://localhost:4000/api/users?page=0&search=Olga&sort_by=last_name&sort_order=asc
+Authorization: Bearer super-secret-api-token
+
+### get user
+GET http://localhost:4000/api/users/280
+Authorization: Bearer super-secret-api-token
+
+### update user
+PUT http://localhost:4000/api/users/280
+Authorization: Bearer super-secret-api-token
+Content-Type: application/json
+
+{
+    "first_name": "test"
+}
+
+### create new user
+POST http://localhost:4000/api/users
+Authorization: Bearer super-secret-api-token
+Content-Type: application/json
+
+{
+  "first_name": "test",
+  "last_name": "test",
+  "birthdate": "1972-05-02",
+  "gender": "female"
+}
+
+### get user
+GET http://localhost:4000/api/users/1408
+Authorization: Bearer super-secret-api-token

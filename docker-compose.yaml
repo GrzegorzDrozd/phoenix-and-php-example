@@ -1,0 +1,43 @@
+name: elixir-and-php-demo-app
+
+services:
+  database:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - ./docker/db/data:/var/lib/postgresql/data
+  phoenix:
+    build: ./phoenix-app
+    environment:
+      API_TOKEN: super-secret-api-token
+    depends_on:
+    - database
+    ports:
+      - "${PHOENIX_PORT}:4000"
+    env_file:
+      - .env
+    volumes:
+      - ./phoenix-app:/app
+
+  symfony:
+    build: ./symfony-app
+    ports:
+      - "${SYMFONY_PORT}:8000"
+    depends_on:
+    - database
+    volumes:
+      - ./symfony-app:/app
+      - ./docker/symfony-app/Caddyfile:/etc/frankenphp/Caddyfile:ro
+    env_file:
+      - .env

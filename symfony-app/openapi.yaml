@@ -1,0 +1,294 @@
+openapi: 3.0.0
+info:
+  title: Phoenix Demo App API
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api
+    description: Local development server
+components:
+  securitySchemes:
+    ApiTokenAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # Assuming JWT based on common Phoenix patterns and ApiTokenAuth plug
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Unique identifier for the user.
+        first_name:
+          type: string
+          description: User's first name.
+          example: John
+        last_name:
+          type: string
+          description: User's last name.
+          example: Doe
+        birthdate:
+          type: string
+          format: date
+          description: User's birthdate in YYYY-MM-DD format.
+          example: "1990-01-01"
+        gender:
+          type: string
+          enum: ["male", "female"]
+          description: User's gender.
+          example: male
+        inserted_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the user was created.
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp when the user was last updated.
+      required:
+        - first_name
+        - last_name
+        - birthdate
+        - gender
+    UsersListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          type: object
+          properties:
+            total_count:
+              type: integer
+              description: Total number of users available.
+            current_page:
+              type: integer
+              description: The current page number.
+      required:
+        - data
+        - meta
+    ImportStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Current status of the import process.
+          enum: ["in_progress", "completed", "failed"] # Assuming these statuses based on context
+          example: completed
+        result:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Number of records successfully imported (if status is completed).
+          description: Result of the import process. Present only if status is completed or failed.
+      required:
+        - status
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A descriptive error message.
+          example: "Import already in progress"
+security:
+  - ApiTokenAuth: []
+
+paths:
+  /import:
+    post:
+      summary: Start an import process
+      description: Initiates a new data import process.
+      operationId: startImport
+      tags:
+        - Import
+      responses:
+        '202':
+          description: Import process successfully started.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Import started"
+        '409':
+          description: Import already in progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: Get import status
+      description: Retrieves the current status of the data import process.
+      operationId: getImportStatus
+      tags:
+        - Import
+      responses:
+        '200':
+          description: Current import status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportStatus'
+  /users:
+    get:
+      summary: List users
+      description: Retrieve a list of users with optional filtering and pagination.
+      operationId: listUsers
+      tags:
+        - Users
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+          description: Page number for pagination (0-indexed).
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search term to filter users by first or last name.
+        - in: query
+          name: birthdate_from
+          schema:
+            type: string
+            format: date
+          description: Filter users with birthdate from this date (YYYY-MM-DD).
+        - in: query
+          name: birthdate_to
+          schema:
+            type: string
+            format: date
+          description: Filter users with birthdate up to this date (YYYY-MM-DD).
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            enum: ["first_name", "last_name", "birthdate", "gender", "inserted_at", "updated_at"]
+          description: Field to sort users by.
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum: ["asc", "desc"]
+            default: asc
+          description: Order of sorting.
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersListResponse'
+    post:
+      summary: Create a user
+      description: Create a new user.
+      operationId: createUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User successfully created.
+          headers:
+            Location:
+              description: URL of the newly created user.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      description: Retrieve a single user by their unique ID.
+      operationId: getUserById
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user.
+      responses:
+        '200':
+          description: User details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a user
+      description: Update an existing user by their unique ID.
+      operationId: updateUser
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a user
+      description: Delete a user by their unique ID.
+      operationId: deleteUser
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the user.
+      responses:
+        '204':
+          description: User successfully deleted.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Import Status{% endblock %}
+
+{% block page_header_title %}Import Status{% endblock %}
+
+{% block page_actions %}
+    <form method="post" action="{{ path('app_import_start') }}" style="display: inline-block;">
+        <input type="hidden" name="_token" value="{{ csrf_token('start_import') }}">
+        <button type="submit" class="btn btn-primary">
+            <!-- Download SVG icon from http://tabler-icons.io/i/player-play -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 4v16l13 -8z" /></svg>
+            Start New Import
+        </button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Current Import Status</h3>
+        </div>
+        <div class="card-body">
+            {% if importStatus %}
+                <div class="datagrid">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Status</div>
+                        <div class="datagrid-content">
+                            {% if importStatus.status == 'in_progress' %}
+                                <span class="badge bg-warning">In Progress</span>
+                            {% elseif importStatus.status == 'completed' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elseif importStatus.status == 'failed' %}
+                                <span class="badge bg-danger">Failed</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ importStatus.status|capitalize }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if importStatus.result %}
+                        <div class="datagrid-item">
+                            <div class="datagrid-title">Records Imported</div>
+                            <div class="datagrid-content">{{ importStatus.result.count ?? 'N/A' }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>No import status available or an error occurred.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

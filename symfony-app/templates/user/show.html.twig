@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}User Details{% endblock %}
+
+{% block page_header_title %}User Details{% endblock %}
+
+{% block page_actions %}
+    <a href="{{ path('app_user_index') }}" class="btn btn-secondary">
+        <!-- Download SVG icon from http://tabler-icons.io/i/list -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="9" y1="6" x2="20" y2="6" /><line x1="9" y1="12" x2="20" y2="12" /><line x1="9" y1="18" x2="20" y2="18" /><line x1="5" y1="6" x2="5" y2="6.01" /><line x1="5" y1="12" x2="5" y2="12.01" /><line x1="5" y1="18" x2="5" y2="18.01" /></svg>
+        Back to list
+    </a>
+    <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+        <!-- Download SVG icon from http://tabler-icons.io/i/edit -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" /><path d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3" /><line x1="16" y1="5" x2="19" y2="8" /></svg>
+        Edit
+    </a>
+    <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Are you sure you want to delete this user?');" style="display: inline-block;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+        <button type="submit" class="btn btn-danger">
+            <!-- Download SVG icon from http://tabler-icons.io/i/trash -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="4" y1="7" x2="20" y2="7" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+            Delete
+        </button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <div class="datagrid">
+                <div class="datagrid-item">
+                    <div class="datagrid-title">ID</div>
+                    <div class="datagrid-content">{{ user.id }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">First Name</div>
+                    <div class="datagrid-content">{{ user.firstName }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Last Name</div>
+                    <div class="datagrid-content">{{ user.lastName }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Birthdate</div>
+                    <div class="datagrid-content">{{ user.birthdate|date('Y-m-d') }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Gender</div>
+                    <div class="datagrid-content">{{ user.gender|capitalize }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Created At</div>
+                    <div class="datagrid-content">{{ user.insertedAt ? user.insertedAt|date('Y-m-d H:i:s') : 'N/A' }}</div>
+                </div>
+                <div class="datagrid-item">
+                    <div class="datagrid-title">Updated At</div>
+                    <div class="datagrid-content">{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
