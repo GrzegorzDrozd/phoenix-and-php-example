@@ -168,6 +168,12 @@ paths:
             format: date
           description: Filter users with birthdate up to this date (YYYY-MM-DD).
         - in: query
+          name: gender
+          schema:
+            type: string
+            enum: ["male", "female"]
+          description: Filter users by gender.
+        - in: query
           name: sort_by
           schema:
             type: string

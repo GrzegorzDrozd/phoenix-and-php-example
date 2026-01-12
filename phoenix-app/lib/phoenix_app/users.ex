@@ -56,6 +56,7 @@ defmodule PhoenixApp.Users do
     query
     |> search_by_name(params["search"])
     |> filter_by_birthdate(params["birthdate_from"], params["birthdate_to"])
+    |> filter_by_gender(params["gender"])
     |> sort_by(params["sort_by"], params["sort_order"])
   end
 
@@ -69,6 +70,12 @@ defmodule PhoenixApp.Users do
       [u],
       ilike(u.first_name, ^wildcard_search) or ilike(u.last_name, ^wildcard_search)
     )
+  end
+
+  defp filter_by_gender(query, nil), do: query
+
+  defp filter_by_gender(query, gender) do
+    where(query, [u], u.gender == ^gender)
   end
 
   defp filter_by_birthdate(query, from, to) do
