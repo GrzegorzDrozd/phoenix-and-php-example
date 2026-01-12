@@ -45,8 +45,17 @@ class ApiClient
 
     /**
      * Lists users with optional filtering and pagination.
+     * @param string|null $gender
      */
-    public function listUsers(int $page = 0, ?string $search = null, ?string $birthdateFrom = null, ?string $birthdateTo = null, ?string $sortBy = null, ?string $sortOrder = null): UsersListResponse
+    public function listUsers(
+        int $page = 0,
+        ?string $search = null,
+        ?string $birthdateFrom = null,
+        ?string $birthdateTo = null,
+        ?string $sortBy = null,
+        ?string $sortOrder = null,
+        ?string $gender = null,
+    ): UsersListResponse
     {
         $query = array_filter([
             'page' => $page,
@@ -55,6 +64,7 @@ class ApiClient
             'birthdate_to' => $birthdateTo,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
+            'gender' => $gender,
         ]);
 
         $content = $this->request('GET', '/users', [

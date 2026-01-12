@@ -26,12 +26,19 @@ class UserController extends AbstractController
         $search = $request->query->get('search');
         $birthdateFrom = $request->query->get('birthdate_from');
         $birthdateTo = $request->query->get('birthdate_to');
+        $gender = $request->query->get('gender');
         $sortBy = $request->query->get('sort_by');
         $sortOrder = $request->query->get('sort_order');
 
         try {
             $usersListResponse = $this->apiClient->listUsers(
-                $page, $search, $birthdateFrom, $birthdateTo, $sortBy, $sortOrder
+                $page,
+                $search,
+                $birthdateFrom,
+                $birthdateTo,
+                $sortBy,
+                $sortOrder,
+                $gender,
             );
             $users = $usersListResponse->getData();
         } catch (\Throwable $e) {
@@ -46,6 +53,7 @@ class UserController extends AbstractController
             'search' => $search,
             'birthdateFrom' => $birthdateFrom,
             'birthdateTo' => $birthdateTo,
+            'gender'=>$gender,
             'sortBy' => $sortBy,
             'sortOrder' => $sortOrder,
         ]);

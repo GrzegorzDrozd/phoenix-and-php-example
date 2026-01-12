@@ -29,6 +29,14 @@
                     <label for="birthdate_to" class="form-label">Birthdate To</label>
                     <input type="text" class="form-control" id="birthdate_to" name="birthdate_to" value="{{ birthdateTo }}" placeholder="YYYY-MM-DD" data-air-datepicker-target="datepickerInput">
                 </div>
+                <div class="col-md-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="">Select</option>
+                        <option value="male" {% if gender == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if gender == 'female' %}selected{% endif %}>Female</option>
+                    </select>
+                </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary mt-4">Apply Filters</button>
                 </div>
