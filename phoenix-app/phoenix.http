@@ -1,21 +1,21 @@
 ### Start import
-POST http://localhost:4000/api/import
+POST http://localhost:8183/api/import
 Authorization: Bearer super-secret-api-token
 
 ### Import progress
-GET http://localhost:4000/api/import
+GET http://localhost:8183/api/import
 Authorization: Bearer super-secret-api-token
 
 ### get users
-GET http://localhost:4000/api/users?page=0&search=Olga&sort_by=last_name&sort_order=asc
+GET http://localhost:8183/api/users?page=0&search=Olga&sort_by=last_name&sort_order=asc
 Authorization: Bearer super-secret-api-token
 
 ### get user
-GET http://localhost:4000/api/users/280
+GET http://localhost:8183/api/users/?gender=female
 Authorization: Bearer super-secret-api-token
 
 ### update user
-PUT http://localhost:4000/api/users/280
+PUT http://localhost:8183/api/users/280
 Authorization: Bearer super-secret-api-token
 Content-Type: application/json
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### create new user
-POST http://localhost:4000/api/users
+POST http://localhost:8183/api/users
 Authorization: Bearer super-secret-api-token
 Content-Type: application/json
 
@@ -36,5 +36,7 @@ Content-Type: application/json
 }
 
 ### get user
-GET http://localhost:4000/api/users/1408
+GET http://localhost:8183/api/users/2002
 Authorization: Bearer super-secret-api-token
+
+
