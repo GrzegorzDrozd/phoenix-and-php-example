@@ -1,1 +1,7 @@
 docker/db/data
+
+.idea
+phoenix-app/.idea
+symfony-app/.idea
+symfony-app/composer.phar
+symfony-app/vendor

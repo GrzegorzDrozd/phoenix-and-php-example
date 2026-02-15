@@ -1,0 +1,19 @@
+{
+    auto_https off
+}
+
+http://0.0.0.0:8000 {
+    # Enable compression (optional)
+    encode zstd br gzip
+
+    root * /app/public
+
+    # Execute PHP files in the current directory and serve assets
+    php_server {
+        root /app/public
+        worker {
+            file index.php
+            watch /app
+        }
+    }
+}
